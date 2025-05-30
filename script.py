@@ -1,0 +1,41 @@
+import random
+from datetime import datetime
+
+
+class NumberGuesser:
+    def __init__(self):
+        self.secret = random.randint(1, 30)
+        self.attempts = 0
+        self.start_time = datetime.now()
+
+    def play(self):
+        print("Угадай число от 1 до 30!")
+
+        while True:
+            guess = input("Введите число: ")
+
+            if not guess.isdigit():
+                print("Надо вводить только числа!")
+                continue
+
+            guess = int(guess)
+            self.attempts += 1
+
+            if guess < self.secret:
+                print("Больше!")
+            elif guess > self.secret:
+                print("Меньше!")
+            else:
+                time_spent = (datetime.now() - self.start_time).seconds
+                self._save_stats(time_spent)
+                print(f"Число {self.secret} угадано за {self.attempts} попыток и {time_spent} секунд")
+                break
+
+    def _save_stats(self, time):
+        with open("logs.txt", "a") as f:
+            f.write(f"Число: {self.secret}, Попытки: {self.attempts}, Время: {time} сек\n")
+
+
+if __name__ == "__main__":
+    game = NumberGuesser()
+    game.play()
